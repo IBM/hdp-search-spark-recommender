@@ -13,7 +13,7 @@ When you have completed this Code Pattern, you will understand how to:
 * Export the trained model into Solr 
 * Using a custom Solr plugin, compute _personalized user_ and _similar item_ recommendations and combine recommendations with search and content filtering
 
-![Architecture diagram](doc/source/images/architecture.png)
+![](images/architecture.png)
 
 ## Flow
 1. Load the movie dataset into Spark.
