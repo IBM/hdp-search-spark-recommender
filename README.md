@@ -1,9 +1,8 @@
-*Read this in other languages: [中国](README-cn.md).*
-# Building a Recommender using Data Science Experience, Apache Spark and HDP Search(Solr) 
+# Building a Recommender using Data Science Experience, Apache Spark and HDP Search (Solr) 
 
 Recommendation engines are one of the most well known, widely used and highest value use cases for applying machine learning. Despite this, while there are many resources available for the basics of training a recommendation model, there are relatively few that explain how to actually deploy these models to create a large-scale recommender system.
 
-This Code Pattern demonstrates the key elements of creating such a system, using Apache Spark and HDP Search(Solr)
+This Code Pattern demonstrates the key elements of creating such a system by using Apache Spark and HDP Search (Solr). Note that this code pattern is a port of Nick Pentreath's [Recommender built with Elasticsearch and Apache Spark](https://github.com/IBM/elasticsearch-spark-recommender).
 
 This repo contains a Jupyter notebook illustrating how to use Spark for training a collaborative filtering recommendation model from ratings data stored in Solr, saving the model factors to Solr, and then using Solr to serve real-time recommendations using the model. The data you will use comes from [MovieLens](https://grouplens.org/datasets/movielens/) and is a common benchmark dataset in the recommendations community. The data consists of a set of ratings given by users of the MovieLens movie rating system, to various movies. It also contains metadata (title and genres) for each movie.
 
@@ -24,14 +23,14 @@ When you have completed this Code Pattern, you will understand how to:
 5. Using Solr queries and a custom vector scoring plugin, generate some example recommendations. [The Movie Database](https://www.themoviedb.org/) API is used to display movie poster images for the recommended movies.
 
 ## Included components
-* [Apache Spark](http://spark.apache.org/): An open-source, fast and general-purpose cluster computing system
-* [Horton works platform](https://hortonworks.com) : Apache Hadoop and Big Data Platform for a Data Driven Enterprise
-* [HDP Search](https://doc.lucidworks.com/lucidworks-hdpsearch/2.6/Guide-Install.html): Open-source search and analytics engine
-* [Jupyter Notebooks](http://jupyter.org/): An open-source web application that allows you to create and share documents that contain live code, equations, visualizations and explanatory text. T
+* [IBM Data Science Experience Local](https://content-dsxlocal.mybluemix.net/docs/content/local/overview.html): An out-of-the-box on premises solution for data scientists and data engineers. It offers a suite of data science tools that integrate with RStudio, Spark, Jupyter, and Zeppelin notebook technologies.
+* [Apache Spark](http://spark.apache.org/): An open-source, fast and general-purpose cluster computing system.
+* [Hortonworks Data Platform (HDP)](https://hortonworks.com/products/data-platforms/hdp/) : HDP is an Apache Hadoop distribution based on a centralized architecture (YARN).
+* [HDP Search](https://doc.lucidworks.com/lucidworks-hdpsearch/2.6/index.html): HDP Search provides applications and tools for indexing content from your HDP cluster to Solr.
+* [Jupyter Notebooks](http://jupyter.org/): An open-source web application that allows you to create and share documents that contain live code, equations, visualizations and explanatory text.
 
 ## Featured technologies
-* [Data Science Local](https://content-dsxlocal.mybluemix.net/docs/content/local/welcome.html): Systems and scientific methods to analyze
-structured and unstructured data in order to extract knowledge and insights.
+
 * [Artificial Intelligence](https://medium.com/ibm-data-science-experience): Artificial intelligence can be applied to disparate solution spaces to deliver disruptive technologies.
 * [Python](https://www.python.org/): Python is a programming language that lets you work more quickly and integrate your systems more effectively.
 
@@ -55,7 +54,8 @@ $ git clone https://github.com/IBM/hdp-search-spark-recommender.git
 ```
 
 ### 2. Setup HDP platform
-(Fill in)
+
+*Coming soon*
 
 ### 3. Set up HDP Search
 
@@ -68,27 +68,24 @@ Next, you will need to install the [Solr vector scoring plugin](https://github.c
 
 Next, restart solr from Ambari.
 
-
 ### 3. Download the Solr Spark connector
 
-This code pattern reads the movie data set and computes the model vectors using spark. The spark dataframes are then written to
-Solr by using the Solr Spark connector. The solr connector for spark can be downloaded from [spark-solr-connector](https://github.com/lucidworks/spark-solr). This code pattern has been tested with connector version 3.3.3.The spark configurations need to be changed to add the connector jars in the spark driver and executor classpath. This can be done via by following the steps below.
+This Code Pattern reads the movie data set and computes the model vectors using spark. The spark dataframes are then written to Solr by using the Solr Spark connector. The Solr connector for Spark can be downloaded from [Lucidworks' Spark-Solr repo](https://github.com/lucidworks/spark-solr).
+
+> This Code Pattern was tested with version 3.3.3 of the connector. The Spark configurations need to be changed to add the connector jars in the Spark driver and executor classpath. This can be done via by following the steps below.
 
    1. Log in to Ambari 
    2. Select spark2 component
    3. Choose configuration tab and add the following property keys under "Custom spark2-defaults"
-      * spark.driver.extraClassPath -> Path to the spark solr connector jar.
-        Example :
-        spark.driver.extraClassPath /home/user1/spark-solr-3.3.3-shaded.jar
-      * spark.executor.extraClassPath -> Path to the spark solr connector jar
-      * spark.jars -> Path to the spark solr connector jar
+      * `spark.driver.extraClassPath` -> Path to the spark solr connector jar.
+        Example: `spark.driver.extraClassPath` -> `/home/user1/spark-solr-3.3.3-shaded.jar`
+      * `spark.executor.extraClassPath` -> Path to the spark solr connector jar
+      * `spark.jars` -> Path to the spark solr connector jar
 
-**Note:**
-In the example above, the path is a local system path. In case of a multi node HDP cluster, please make sure that this jar is
-available under same path in all the nodes. Another option is to put the jar in HDFS and specify the HDFS location.
-
+> Note: In the example above, the path is a local system path. In case of a multi node HDP cluster, please make sure that this jar is available under same path in all the nodes. Another option is to put the jar in HDFS and specify the HDFS location.
 
 You will also need to install [Numpy](http://www.numpy.org) in order to use Spark's machine learning library, [MLlib](http://spark.apache.org/mllib). If you don't have Numpy installed, run:
+
 ```
 $ pip install numpy
 ```
@@ -116,8 +113,7 @@ To run the notebook you will need to start DSX Local. Below are the steps that n
 the very first time.
    1. Import the notebook into DSX Local from the github location.
    2. Fill in the values such as solr install location, solr install host name , ssh userid/password, tmdb access key etc.
-   3. Run the notebook. 
-```
+   3. Run the notebook.
 
 ### 7. Run the notebook
 
@@ -150,7 +146,9 @@ The example output in the `data/examples` folder shows the output of the noteboo
 > *Note:* To see the code and markdown cells without output, you can view [the raw notebook in the Github viewer](notebooks/elasticsearch-spark-recommender.ipynb).
 
 # Troubleshooting
-<fill-in>
+
+*Coming soon*
+
 # Learn more
 
 * **Data Analytics Code Patterns**: Enjoyed this Code Pattern? Check out our other [Data Analytics Code Patterns](https://developer.ibm.com/code/technologies/data-science/)
