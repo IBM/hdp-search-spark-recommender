@@ -107,40 +107,17 @@ to hdfs by issuing the ```hadoop fs -put``` command.
 
 ### 7. Setup python plugins
 This code pattern relies upon a few python plugins. Some plugins are required to be installed in the node where DSX Local is installed and the others need to be installed in all the HDP compute nodes. The following table describes the details regarding these plugins and the location where they need to be installed.
-<table style="width:100%">
-  <tr>
-    <th>plugin name</th>
-    <th>Install Location</th> 
-  </tr>
-  <tr>
-    <td>tmdbsimple</td>
-    <td>DSX Local Node</td> 
-  </tr>
-  <tr>
-    <td>IPython</td>
-    <td>Need to be installed on DSX Local node</td> 
-  </tr>
-  <tr>
-    <td>paramiko</td>
-    <td>All nodes of HDP cluster</td> 
-  </tr>
-  <tr>
-    <td>numpy</td>
-    <td>All nodes of HDP cluster</td> 
-  </tr>
-  <tr>
-    <td>simplejson</td>
-    <td>DSX Local and all nodes of HDP cluster</td> 
-  </tr>
-  <tr>
-    <td>urllib2</td>
-    <td>DSX Local and all nodes of HDP cluster</td> 
-  </tr>
-  <tr>
-    <td>solrcloudpy</td>
-    <td>DSX Local and all nodes of HDP cluster</td> 
-  </tr>
-</table>
+
+
+| Library | Install Location |
+| ------------- | ------------- |
+| tmdbsimple | DSX Local Node |
+| IPython  | Need to be installed on DSX Local node |
+| paramiko | All nodes of HDP cluster | 
+| numpy | All nodes of HDP cluster |
+| simplejson | DSX Local and all nodes of HDP cluster |
+| urllib2 | DSX Local and all nodes of HDP cluster |
+| solrcloudpy | DSX Local and all nodes of HDP cluster |
 
 The plugins can be installed using the pip command. Example :
 
@@ -149,9 +126,6 @@ $ pip install numpy
 ```
 
 > Note: Some of the plugins may already be installed/present in your environment. In that case please skip that plugin and move to the next plugin in the table.
-
-
-
 
 ### 8. Launch the notebook
 
