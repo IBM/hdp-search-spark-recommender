@@ -38,12 +38,14 @@ When you have completed this Code Pattern, you will understand how to:
 Follow these steps to create the required services and run the notebook locally.
 
 1. [Clone the repo](#1-clone-the-repo)
-2. [Set up HDP platform](#2-set-up-hdp-platform)
-3. [Set up HDP Search](#2-set-up-hdp-search)
-4. [Download the Solr Spark connector](#3-download-the-solr-spark-connector)
-5. [Download and move data to HDFS](#5-download-and-move-the-data)
-6. [Launch the notebook](#6-launch-the-notebook)
-7. [Run the notebook](#7-run-the-notebook)
+2. [Setup HDP platform](#2-set-up-hdp-platform)
+3. [Setup HDP Search](#3-set-up-hdp-search)
+4. [Setup DSX Local & configure it to run against HDP using Livy gateway](#4-set-up-dsx-local)
+5. [Download the Solr Spark connector](#5-download-the-solr-spark-connector)
+6. [Download and move data to HDFS](#6-download-and-move-the-data)
+7. [Setup python plugins](#7-set-up-python-plugins)
+8. [Launch the notebook](#8-launch-the-notebook)
+9. [Run the notebook](#8-run-the-notebook)
 
 ### 1. Clone the repo
 
@@ -68,9 +70,13 @@ Next, you will need to install the [Solr vector scoring plugin](https://github.c
 
 Next, restart solr from Ambari.
 
-### 3. Download the Solr Spark connector
+### 4. Setup DSX Local & configure it to run against HDP using Livy gateway
 
-This Code Pattern reads the movie data set and computes the model vectors using spark. The spark dataframes are then written to Solr by using the Solr Spark connector. The Solr connector for Spark can be downloaded from [Lucidworks' Spark-Solr repo](https://github.com/lucidworks/spark-solr).
+*Coming soon*
+
+### 5. Download the Solr Spark connector
+
+This Code Pattern reads the movie data set and computes the model vectors using spark. The spark dataframes representing the movie data set and model vectors are then written to Solr by using the Solr Spark connector. The Solr connector for Spark can be downloaded from [Lucidworks' Spark-Solr repo](https://github.com/lucidworks/spark-solr).
 
 > This Code Pattern was tested with version 3.3.3 of the connector. The Spark configurations need to be changed to add the connector jars in the Spark driver and executor classpath. This can be done via by following the steps below.
 
@@ -84,13 +90,7 @@ This Code Pattern reads the movie data set and computes the model vectors using 
 
 > Note: In the example above, the path is a local system path. In case of a multi node HDP cluster, please make sure that this jar is available under same path in all the nodes. Another option is to put the jar in HDFS and specify the HDFS location.
 
-You will also need to install [Numpy](http://www.numpy.org) in order to use Spark's machine learning library, [MLlib](http://spark.apache.org/mllib). If you don't have Numpy installed, run:
-
-```
-$ pip install numpy
-```
-
-### 5. Download the data
+### 6. Download the data
 
 You will be using the [Movielens dataset](https://grouplens.org/datasets/movielens/) of ratings given by a set of users to movies, together with movie metadata. There are a few versions of the dataset. You should download the ["latest small" version](http://files.grouplens.org/datasets/movielens/ml-latest-small.zip).
 
@@ -105,7 +105,55 @@ $ unzip ml-latest-small.zip
 This code pattern is targeted to run against a multi node HDP cluster. Therefore the dataset needs to be moved to HDFS. Move the data
 to hdfs by issuing the ```hadoop fs -put``` command. 
 
-### 6. Launch the notebook
+### 7. Setup python plugins
+This code pattern relies upon a few python plugins. Some plugins are required to be installed in the node where DSX Local is installed and the others need to be installed in all the HDP compute nodes. The following table describes the details regarding these plugins and the location where they need to be installed.
+<table style="width:100%">
+  <tr>
+    <th>plugin name</th>
+    <th>Install Location</th> 
+  </tr>
+  <tr>
+    <td>tmdbsimple</td>
+    <td>DSX Local Node</td> 
+  </tr>
+  <tr>
+    <td>IPython</td>
+    <td>Need to be installed on DSX Local node</td> 
+  </tr>
+  <tr>
+    <td>paramiko</td>
+    <td>All nodes of HDP cluster</td> 
+  </tr>
+  <tr>
+    <td>numpy</td>
+    <td>All nodes of HDP cluster</td> 
+  </tr>
+  <tr>
+    <td>simplejson</td>
+    <td>DSX Local and all nodes of HDP cluster</td> 
+  </tr>
+  <tr>
+    <td>urllib2</td>
+    <td>DSX Local and all nodes of HDP cluster</td> 
+  </tr>
+  <tr>
+    <td>solrcloudpy</td>
+    <td>DSX Local and all nodes of HDP cluster</td> 
+  </tr>
+</table>
+
+The plugins can be installed using the pip command. Example :
+
+```
+$ pip install numpy
+```
+
+> Note: Some of the plugins may already be installed/present in your environment. In that case please skip that plugin and move to the next plugin in the table.
+
+
+
+
+### 8. Launch the notebook
 
 > The notebook should work with Python 2.7 or 3.x (and has been tested on 2.7.11 and 3.6.1)
 
@@ -115,7 +163,7 @@ the very first time.
    2. Fill in the values such as solr install location, solr install host name , ssh userid/password, tmdb access key etc.
    3. Run the notebook.
 
-### 7. Run the notebook
+### 9. Run the notebook
 
 When a notebook is executed, what is actually happening is that each code cell in
 the notebook is executed, in order, from top to bottom.
