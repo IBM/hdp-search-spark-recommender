@@ -123,9 +123,9 @@ To install HDP Search, follow the [HDP Search instructions](https://docs.hortonw
 
 ### 3. Setup DSX Local
 
-This code pattern was tested using [DSX Desktop](https://www.ibm.com/products/data-science-experience), a lightweight version of DSX Local intended for standalone use and optimized for local development. For production deployments it is recommended to use DSX Local with a three node configuration, for information on how to do that, see the [DSX Install Docs](https://content-dsxlocal.mybluemix.net/docs/content/local/welcome.html).
+This code pattern was tested using [DSX Desktop](https://www.ibm.com/products/data-science-experience), a lightweight version of DSX Local intended for standalone use and optimized for local development. For production deployments it is recommended to use DSX Local with a three node configuration. For information on how to do that, see the [DSX Install Docs](https://content-dsxlocal.mybluemix.net/docs/content/local/welcome.html).
 
-Additionally, DSX Local providing documentation on how to set up HDP to work with HDP! Check out [Set up an HDP cluster for DSX](https://content-dsxlocal.mybluemix.net/docs/content/local/hdp.html) for more details.
+Additionally, DSX Local provides documentation on how to set up HDP to work with DSX! Check out [Set up an HDP cluster for DSX](https://content-dsxlocal.mybluemix.net/docs/content/local/hdp.html) for more details.
 
 ### 4. Setup a Livy gateway
 
@@ -255,9 +255,17 @@ There are several ways to execute the code cells in your notebook:
 
 # Sample output
 
-The example output in the `data/examples` folder shows the output of the notebook after running it in full. View it it [here]().
+After classifying the data by movies, ratings and genres, we train our recommender model. 
 
-> *Note:* To see the code and markdown cells without output, you can view [the raw notebook in the Github viewer](notebooks/elasticsearch-spark-recommender.ipynb).
+![](images/ratings-table.png)
+
+![](images/genre-table.png)
+
+After loading our model into Solr, we can predict which movies people will like based on ratings of similar movies in the same genre.
+
+![](images/movie-list.png)
+
+The example output in the [data/examples](data/examples) folder shows the output of the notebook after running it in full. View it [here](data/examples/solr-hdp-spark-recommender.ipynb).
 
 # Troubleshooting
 

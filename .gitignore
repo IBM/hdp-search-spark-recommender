@@ -21,3 +21,6 @@ project/plugins/project/
 
 # SparkSQL
 metastore_db/
+
+# Mac files
+.DS_Store
