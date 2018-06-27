@@ -6,7 +6,9 @@ This Code Pattern demonstrates the key elements of creating such a system by usi
 
 > **What is HDP and HDP Search?** HortonWorks Data Platform (HDP) is a massively scalable platform for storing, processing and analyzing large volumes of data. HDP consists of the essential set of Apache Hadoop projects including MapReduce, Hadoop Distributed File System (HDFS), HCatalog, Pig, Hive, HBase, Zookeeper and Ambari. HDP Search provides applications and tools for indexing content from your HDP cluster to Solr (an open source enterprise search platform).
 
-  ![](images/hdp.jpg)
+  ![](images/hdp_arch.png)
+
+   *Hortonworks Data Platform by [Hortonworks](https://hortonworks.com/products/data-platforms/hdp/)*
 
 > **What is DSX Local?** DSX Local is an on premises solution for data scientists and data engineers. It offers a suite of data science tools that integrate with RStudio, Spark, Jupyter, and Zeppelin notebook technologies. And yes, it can be configured to use HDP, too.
 
@@ -259,9 +261,6 @@ The example output in the `data/examples` folder shows the output of the noteboo
 
 # Troubleshooting
 
-* If using DSX Desktop you can see all the processes in docker by running the command in terminal: `docker ps`
-* In order to view logs on your notebook you can select the container id of the notebook and run : `docker logs <container id>`
-
 * Should DSX Desktop fail to respond at any time perform the following steps:
   * Close IBM DSX desktop
   * Kill all the processes related to DSX Local from terminal:
@@ -280,10 +279,6 @@ The example output in the `data/examples` folder shows the output of the noteboo
 
   * Restart DSX Desktop
   * Load the jupyter notebook again
-
-* You can view all the docker images used by the app using: `docker images`
-* All the logs can be found in location: `~/Library/Application \Support/Logs/`
-
 
 # Links
 
