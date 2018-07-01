@@ -50,53 +50,32 @@ Follow these steps to create the required services and run the notebook locally.
 
 1. [Setup HDP platform](#1-set-up-hdp-platform)
 2. [Setup HDP Search](#2-set-up-hdp-search)
-3. [Setup DSX Local](#3-set-up-dsx-local)
-4. [Setup a Livy gateway](#4-set-up-a-livy-gateway)
-5. [Download the Solr Spark connector](#5-download-the-solr-spark-connector)
-6. [Clone the repo](#6-clone-the-repo)
-7. [Download and move the data to HDFS](#7-download-and-move-the-data-to-hdfs)
-8. [Setup python plugins](#8-setup-python-plugins)
-9. [Launch the notebook](#9-launch-the-notebook)
-10. [Run the notebook](#10-run-the-notebook)
+3. [Setup DSX Desktop](#3-set-up-dsx-desktop)
+4. [Download the Solr Spark connector](#5-download-the-solr-spark-connector)
+5. [Clone the repo](#6-clone-the-repo)
+6. [Download and move the data to HDFS](#7-download-and-move-the-data-to-hdfs)
+7. [Setup python plugins](#8-setup-python-plugins)
+8. [Launch the notebook](#9-launch-the-notebook)
+9. [Run the notebook](#10-run-the-notebook)
 
 ### 1. Setup HDP platform
 
-Due to the various deployment methods of HDP we will cover the method we used when developing the code pattern, which was to use a Dockerized HDP Sandbox. This can be accomplished by performing the following steps:
+Please install HDP v2.6.4 by following instructions at [install_hdp](https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.4/bk_command-line-installation/content/ch_getting_ready_chapter.html) to install and setup HDP cluster. 
 
-1. Navigate to [https://hortonworks.com/downloads/#sandbox](https://hortonworks.com/downloads/#sandbox) and choose the `Docker Linux/Mac` option. Note, you may be required to create a free account. This will download a `start-sandbox-hdp-standalone_2-6-4.sh.zip` file to your OS.
+After you finish installing HDP v2.6.4, you need to disable livy server's CSRF protection: go to your Ambari server UI, click the `Spark2` on the left side panel, click the 'Configs' on the top, click on the `Advanced livy2-conf`
+change the variable `livy.server.csrf_protection.enable` from true to false, then restart the server.
 
-    ![](images/hdp-dockerized.png)
-
-1. At this point start the Docker daemon and simply unzip the file to execute the script using:
-
-    ```
-    unzip start-sandbox-hdp-standalone_2-6-4.sh.zip
-    sh start-sandbox-hdp-standalone_2-6-4.sh
-    ```
-
-A Dockerized version of HDP v2.6.4 should now be up and running when the script is complete. The full documentation can be seen in the [HDP install guide](https://hortonworks.com/tutorial/sandbox-deployment-and-install-guide/section/3/).
+  ![](images/dsx-local-create-project-spark2-livy.png)
+ 
+Since the code pattern makes sure of several python plugins (tmdbsimple, solrcloudpy, simplejson, Solr vector scoring plugin) and spark extension through solr spark connector, we strongly recommend that the components are at the right version for the pattern to run smoothly. 
+	
+	1. HDP is at v2.6.4
+	1. Python version is at 2.7
+	1. Spark version is at 2.2
 
 ### 2. Set up HDP Search
 
 To install HDP Search, follow the [HDP Search instructions](https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.4/bk_solr-search-installation/content/hdp-search30-install-mpack.html). This code pattern was tested with Solar v6.6.2 and assumes that Solr is started in cloud mode. Minimally, this can be accomplished by performing the following steps:
-
-1. Download the Ambari management pack to the Ambari Server host:
-
-    ```
-    wget http://public-repo-1.hortonworks.com/HDP-SOLR/hdp-solr-ambari-mp/solr-service-mpack-3.0.0.tar.gz
-    ```
-
-1. Install the management pack on the Ambari Server host:
-
-    ```
-    ambari-server install-mpack --mpack=/tmp/solr-service-mpack-3.0.0.tar.gz
-    ```
-
-1. Restart the Ambari server.
-
-    ```
-    ambari-server restart
-    ```
 
 1. After installing HDP Search (Solr), verify that the server is running by performing one of the two methods.
 
@@ -121,17 +100,18 @@ To install HDP Search, follow the [HDP Search instructions](https://docs.hortonw
     ambari-server restart
     ```
 
-### 3. Setup DSX Local
 
-This code pattern was tested using [DSX Desktop](https://www.ibm.com/products/data-science-experience), a lightweight version of DSX Local intended for standalone use and optimized for local development. For production deployments it is recommended to use DSX Local with a three node configuration. For information on how to do that, see the [DSX Install Docs](https://content-dsxlocal.mybluemix.net/docs/content/local/welcome.html).
+### 3. Setup DSX Desktop 
 
-Additionally, DSX Local provides documentation on how to set up HDP to work with DSX! Check out [Set up an HDP cluster for DSX](https://content-dsxlocal.mybluemix.net/docs/content/local/hdp.html) for more details.
+This code pattern was tested using [DSX Desktop](https://www.ibm.com/products/data-science-experience), a lightweight version of DSX Local intended for standalone use and optimized for local development. For information on how to do that, see the [DSX Desktop Install Docs](https://content-dsxdesktop.mybluemix.net/docs/content/desktop/install.html). 
 
-### 4. Setup a Livy gateway
+For production deployments it is recommended to use DSX Local with a three node configuration. For information on how to do that, see the [DSX Install Docs](https://content-dsxlocal.mybluemix.net/docs/content/local/welcome.html).
 
-*Coming soon*
+When you install the Notebooks, please choose Anaconda(Python 2.7) for the Jupyter Notebook.
+     
+  ![](images/dsx-local-create-project-dsx-Desktop.png)
 
-### 5. Download the Solr Spark connector
+### 4. Download the Solr Spark connector
 
 This code pattern reads the movie data set and computes the model vectors using Spark. The Spark dataframes representing the movie data set and model vectors are then written to Solr by using the Solr Spark connector. The Solr connector for Spark can be downloaded from [Lucidworks' Spark-Solr repo](https://github.com/lucidworks/spark-solr).
 
@@ -147,7 +127,7 @@ This code pattern reads the movie data set and computes the model vectors using 
 
 > Note: In the example above, the path is a local system path. In case of a multi node HDP cluster, please make sure that this jar is available under same path in all the nodes. Another option is to put the jar in HDFS and specify the HDFS location.
 
-### 6. Clone the repo
+### 5. Clone the repo
 
 Now that our HDP and DSX Local installation is complete, we can proceed with making the two communicate with each other. We start by cloning the `hdp-search-spark-recommender` repository locally. In a terminal, run the following command:
 
@@ -155,7 +135,7 @@ Now that our HDP and DSX Local installation is complete, we can proceed with mak
 git clone https://github.com/IBM/hdp-search-spark-recommender.git
 ```
 
-### 7. Download and move the data to HDFS
+### 6. Download and move the data to HDFS
 
 In this code pattern we will be using the [Movielens dataset](https://grouplens.org/datasets/movielens/), it contains ratings given by a set of users for movies, as well as movie metadata. For the purpose of this code pattern, we can download the ["latest small" version](http://files.grouplens.org/datasets/movielens/ml-latest-small.zip) of the data set.
 
@@ -174,7 +154,7 @@ to HDFS by issuing the following command:
 hadoop fs -put
 ```
 
-### 8. Setup python plugins
+### 7. Setup python plugins
 
 This code pattern relies upon a few python plugins for everything to work together. Some plugins are required to be installed in the node where DSX Local is installed and the others need to be installed in all the HDP compute nodes. The following table describes the details where these plugins are to be installed.
 
@@ -196,7 +176,7 @@ pip install numpy
 
 > Note: Some of the plugins may already be installed/present in your environment. In that case please skip that plugin and move to the next plugin in the table.
 
-### 9. Launch the notebook
+### 8. Launch the notebook
 
 > The notebook provided in this repo should work with Python 2.7.x or 3.x (and has been tested on 2.7.11 and 3.6.1)
 
@@ -229,7 +209,7 @@ the very first time.
 
 1. Run the notebook!
 
-### 10. Run the notebook
+### 9. Run the notebook
 
 When a notebook is executed, what is actually happening is that each code cell in
 the notebook is executed, in order, from top to bottom.
@@ -269,25 +249,54 @@ The example output in the [data/examples](data/examples) folder shows the output
 
 # Troubleshooting
 
-* Should DSX Desktop fail to respond at any time perform the following steps:
-  * Close IBM DSX desktop
-  * Kill all the processes related to DSX Local from terminal:
+* Error: `Should DSX Desktop fail to respond at any time.`
+  > Solution: Perform the following steps:
 
-    ```
-    docker ps |grep dsx
-    docker rm -f <container id>
-    ```
+    	* Close IBM DSX desktop
+    	* Kill all the processes related to DSX Local from terminal:
 
-  * Remove DSX Desktop metadata
+      	```
+    	docker ps |grep dsx
+    	docker rm -f <container id>
+    	```
 
-    ```
-    cd ~/Library/Application \Support/
-    rm -rf ibm-dsx-desktop
-    ```
+  	* Remove DSX Desktop metadata
 
-  * Restart DSX Desktop
-  * Load the jupyter notebook again
+    	```
+    	cd ~/Library/Application \Support/
+    	rm -rf ibm-dsx-desktop
+    	```
 
+  	* Restart DSX Desktop
+  	* Load the jupyter notebook again
+
+* Error: `Missing Required Header for CSRF protection.`
+
+	
+   If you see this error when trying to create spark session through livy(the cell below), it means that you need to diable the CSRF in the livy property.   
+   ```
+   livyURL="http://host name:8999"
+   %spark add -s spark -l python -u $livyURL
+   ``` 
+
+  > Solution: Go to the setup Step1, follow the step to disable livy's livy.server.csrf_protection.enable property.
+
+* Error: `404 Client Error: Not Found for url: http://your hostname:8983/solr/ratings/schema`
+ 
+	If you see this error when running this cell
+  	```
+  	%%spark
+  	setupSchema()
+  	conn = SolrConnection(SOLR_HOST_PORT, version="6.6.0")
+  	```
+  
+ 	go to Solr's UI, and click the "Logging" on the left side, and check the latest logs, if showing
+  
+  	Error: `org.apache.solr.common.SolrException: Error CREATEing SolrCore 'movies_vector_shard1_replica1': Unable to create core [movies_vector_shard1_replica1] Caused by: /solr/movies_vector/core_node    1/data/index/write.lock for client 172.17.0.2 already exists`
+  
+  > Solution: Find your solr data/index directory which is specified in conf/solrconfig.xml, delete only the write.log in data/index folder.
+
+  
 # Links
 
 * [Teaming on Data: IBM and Hortonworks Broaden Relationship](https://hortonworks.com/blog/teaming-data-ibm-hortonworks-broaden-relationship/)
