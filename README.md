@@ -25,11 +25,13 @@ When you have completed this Code Pattern, you will understand how to:
 
 ![](images/architecture.png)
 
-1. Load the movie dataset into Spark.
-2. Use Spark DataFrame operations to clean up the dataset and load it into Solr.
-3. Using Spark MLlib, train a collaborative filtering recommendation model.
-4. Save the resulting model into Solr.
-5. Using Solr queries and a custom vector scoring plugin, generate some example recommendations. [The Movie Database](https://www.themoviedb.org/) API is used to display movie poster images for the recommended movies.
+1. Load the movie dataset into Apache Hadoop HDFS.
+2. Use Spark DataFrame operations to clean the dataset and use Spark MLlib to train a collaborative filtering recommendation model.
+3. Save the resulting model into Apache Solr.
+4. The user can run the provided notebook in IBM's Data Science Experience Local
+5. As the notebook runs, Apache Livy will be called to interact with the Spark service in HDP.
+6. Using Solr queries and a custom vector scoring plugin, generate example recommendations.
+7. When necessary, retrieve information about movies, such as poster images, using [The Movie Database](https://www.themoviedb.org/) APIs.
 
 ## Included components
 
