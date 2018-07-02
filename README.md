@@ -28,7 +28,7 @@ When you have completed this Code Pattern, you will understand how to:
 1. Load the movie dataset into Apache Hadoop HDFS.
 2. Use Spark DataFrame operations to clean the dataset and use Spark MLlib to train a collaborative filtering recommendation model.
 3. Save the resulting model into Apache Solr.
-4. The user can run the provided notebook in IBM's Data Science Experience Local
+4. The user can run the provided notebook in IBM's Data Science Experience Local.
 5. As the notebook runs, Apache Livy will be called to interact with the Spark service in HDP.
 6. Using Solr queries and a custom vector scoring plugin, generate example recommendations.
 7. When necessary, retrieve information about movies, such as poster images, using [The Movie Database](https://www.themoviedb.org/) APIs.
@@ -64,7 +64,7 @@ Follow these steps to create the required services and run the notebook locally.
 
 Please install HDP v2.6.4 by following instructions at [install_hdp](https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.4/bk_command-line-installation/content/ch_getting_ready_chapter.html) to install and setup HDP cluster. 
 
-After you finish installing HDP v2.6.4, you need to disable livy server's CSRF protection: go to your Ambari server UI, click the `Spark2` on the left side panel, click the 'Configs' on the top, click on the `Advanced livy2-conf`
+After you finish installing HDP v2.6.4, you need to disable livy server's CSRF protection: go to your Ambari server UI, click the `Spark2` on the left side panel, click the `Configs` on the top, click on the `Advanced livy2-conf`
 change the variable `livy.server.csrf_protection.enable` from true to false, then restart the server.
 
   ![](images/dsx-local-create-project-spark2-livy.png)
@@ -109,7 +109,7 @@ This code pattern was tested using [DSX Desktop](https://www.ibm.com/products/da
 
 For production deployments it is recommended to use DSX Local with a three node configuration. For information on how to do that, see the [DSX Install Docs](https://content-dsxlocal.mybluemix.net/docs/content/local/welcome.html).
 
-When you install the Notebooks, please choose Anaconda(Python 2.7) for the Jupyter Notebook.
+When you install the Notebooks, please choose Anaconda (Python 2.7) for the Jupyter Notebook.
      
   ![](images/dsx-local-create-project-dsx-Desktop.png)
 
@@ -275,13 +275,13 @@ The example output in the [data/examples](data/examples) folder shows the output
 * Error: `Missing Required Header for CSRF protection.`
 
 	
-   If you see this error when trying to create spark session through livy(the cell below), it means that you need to diable the CSRF in the livy property.   
+   If you see this error when trying to create spark session through livy (the cell below), it means that you need to diable the CSRF in the livy property.   
    ```
    livyURL="http://host name:8999"
    %spark add -s spark -l python -u $livyURL
    ``` 
 
-  > Solution: Go to the setup Step1, follow the step to disable livy's livy.server.csrf_protection.enable property.
+  > Solution: Go to the setup Step1, follow the step to disable livy's `livy.server.csrf_protection.enable` property.
 
 * Error: `404 Client Error: Not Found for url: http://your hostname:8983/solr/ratings/schema`
  
@@ -292,11 +292,11 @@ The example output in the [data/examples](data/examples) folder shows the output
   	conn = SolrConnection(SOLR_HOST_PORT, version="6.6.0")
   	```
   
- 	go to Solr's UI, and click the "Logging" on the left side, and check the latest logs, if showing
+ 	go to Solr's UI, and click the `Logging` on the left side, and check the latest logs, if showing
   
   	Error: `org.apache.solr.common.SolrException: Error CREATEing SolrCore 'movies_vector_shard1_replica1': Unable to create core [movies_vector_shard1_replica1] Caused by: /solr/movies_vector/core_node    1/data/index/write.lock for client 172.17.0.2 already exists`
   
-  > Solution: Find your solr data/index directory which is specified in conf/solrconfig.xml, delete only the write.log in data/index folder.
+  > Solution: Find your solr data/index directory which is specified in `conf/solrconfig.xml`, delete only the write.log in data/index folder.
 
   
 # Links
