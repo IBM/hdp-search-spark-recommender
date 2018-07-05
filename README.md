@@ -1,10 +1,10 @@
-# Building a Recommender using Data Science Experience Local and HortonWorks Data Platform
+# Building a Recommender using Data Science Experience Local and Hortonworks Data Platform
 
 Recommendation engines are one of the most well known, widely used and highest value use cases for applying machine learning. Despite this, while there are many resources available for the basics of training a recommendation model, there are relatively few that explain how to actually deploy these models to create a large-scale recommender system.
 
-This Code Pattern demonstrates the key elements of creating such a system by using Apache Spark and HDP Search (Solr). Note that this code pattern is a port of Nick Pentreath's [Recommender built with Elasticsearch and Apache Spark](https://github.com/IBM/elasticsearch-spark-recommender), but with a focus on using HortonWorks Data Platform (HDP) and IBM's Data Science Experience Local (DSX Local).
+This Code Pattern demonstrates the key elements of creating such a system by using Apache Spark and HDP Search (Solr). Note that this code pattern is a port of Nick Pentreath's [Recommender built with Elasticsearch and Apache Spark](https://github.com/IBM/elasticsearch-spark-recommender), but with a focus on using Hortonworks Data Platform (HDP) and IBM's Data Science Experience Local (DSX Local).
 
-> **What is HDP and HDP Search?** HortonWorks Data Platform (HDP) is a massively scalable platform for storing, processing and analyzing large volumes of data. HDP consists of the essential set of Apache Hadoop projects including MapReduce, Hadoop Distributed File System (HDFS), HCatalog, Pig, Hive, HBase, Zookeeper and Ambari. HDP Search provides applications and tools for indexing content from your HDP cluster to Solr (an open source enterprise search platform).
+> **What is HDP and HDP Search?** Hortonworks Data Platform (HDP) is a massively scalable platform for storing, processing and analyzing large volumes of data. HDP consists of the essential set of Apache Hadoop projects including MapReduce, Hadoop Distributed File System (HDFS), HCatalog, Pig, Hive, HBase, Zookeeper and Ambari. HDP Search provides applications and tools for indexing content from your HDP cluster to Solr (an open source enterprise search platform).
 
   ![](images/hdp_arch.png)
 
