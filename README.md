@@ -94,9 +94,12 @@ To install HDP Search, follow the [HDP Search instructions](https://docs.hortonw
       ./solr status
       ```
 
-1. The last step is to install the [Solr vector scoring plugin](https://github.com/saaay71/solr-vector-scoring). Please follow the installation instructions on the page to install the plugin.
+2. The last step is to install the [Solr vector scoring plugin](https://github.com/saaay71/solr-vector-scoring). Please follow the installation instructions on the page to install the plugin.
+   Please ensure that the modifications to `solrconfig.xml` and `managed_schema` are done manually and not through cut-paste as some unwanted characters may get inserted. In order to
+   ensure that the plugin configurations are correct, please the examples mentioned in [Examples](https://github.com/saaay71/solr-vector-scoring). In order to try the examples
+   you may require to create a test collection. You can create collections by following instructions at [Solr Commands](https://lucene.apache.org/solr/guide/6_6/running-solr.html#running-solr).
 
-1. Finally, restart the Ambari server one last time.
+3. Finally, restart the Ambari server one last time.
 
     ```
     ambari-server restart
@@ -117,13 +120,27 @@ When you install the Notebooks, please choose Anaconda (Python 2.7) for the Jupy
 
 This code pattern reads the movie data set and computes the model vectors using Spark. The Spark dataframes representing the movie data set and model vectors are then written to Solr by using the Solr Spark connector. The Solr connector for Spark can be downloaded from [Lucidworks' Spark-Solr repo](https://github.com/lucidworks/spark-solr).
 
-> This code pattern was tested with version 3.3.3 of the connector. The Spark configurations need to be changed to add the connector jars in the Spark driver and executor classpath. This can be done via by following the steps below.
+> This code pattern was tested with version 3.5.1 of the connector. The Spark configurations need to be changed to add the connector jars in the Spark driver and executor classpath. This can be done via by following the steps below.
+
+> Special consideration:
+  The solr connector jar is available in two flavours. First one (non shaded) only carries classes specific to the connector. The second one (shaded) carries the connector specific classes along
+  with all its dependencies. Ideally we want the shaded version of the jar that contains the dependency classes. However, it contains the full spark and scala classes which conflicts with 
+  the spark runtime when this jar is specified in spark classpath. To alleviate this problem, we need to remove the spark and scala classes from this jar. Below are the steps :
+
+  1. Copy the downloaded jar in a backup directory.
+  2. create a temporary work directory and cd to it.
+  3. Extract the jar using `jar -xvf <location of jar file>` into a work folder.
+  4. rm -rf scala
+  5. rm -rf org/apache/spark
+  4. jar -cvf spark-solr-3.5.1-shaded-modified.jar *
+
+  
 
    1. Log into Ambari
    2. Select spark2 component
    3. Choose configuration tab and add the following property keys under "Custom spark2-defaults"
       * `spark.driver.extraClassPath` -> Path to the spark solr connector jar.
-        Example: `spark.driver.extraClassPath` -> `/home/user1/spark-solr-3.3.3-shaded.jar`
+        Example: `spark.driver.extraClassPath` -> `/home/user1/spark-solr-3.5.1-shaded-modified.jar`
       * `spark.executor.extraClassPath` -> Path to the spark solr connector jar
       * `spark.jars` -> Path to the spark solr connector jar
 
@@ -150,33 +167,54 @@ unzip ml-latest-small.zip
 ```
 
 This code pattern is targeted to run against a multi node HDP cluster. Therefore the dataset needs to be moved to HDFS. Move the data
-to HDFS by issuing the following command:
+to HDFS by issuing the following commands:
 
 ```
-hadoop fs -put
+hadoop fs -mkdir /movies
+hadoop fs -put *.csv /movies
 ```
 
 ### 7. Setup python plugins
 
-This code pattern relies upon a few python plugins for everything to work together. Some plugins are required to be installed in the node where DSX Local is installed and the others need to be installed in all the HDP compute nodes. The following table describes the details where these plugins are to be installed.
+This code pattern relies upon a few python plugins for everything to work together. Some plugins are required to be installed in the node where DSX Local or DSX Desktop is installed and the others need to be installed in all the HDP compute nodes. The following table describes the details where these plugins are to be installed.
 
 | Library | Install Location |
 | ------------- | ------------- |
-| tmdbsimple | DSX Local Node |
-| IPython  | Need to be installed on DSX Local node |
+| tmdbsimple | DSX Node |
+| IPython  | Need to be installed on DSX node |
 | paramiko | All nodes of HDP cluster | 
 | numpy | All nodes of HDP cluster |
-| simplejson | DSX Local and all nodes of HDP cluster |
-| urllib2 | DSX Local and all nodes of HDP cluster |
-| solrcloudpy | DSX Local and all nodes of HDP cluster |
+| simplejson | DSX and all nodes of HDP cluster |
+| urllib2 | DSX and all nodes of HDP cluster |
+| solrcloudpy | DSX and all nodes of HDP cluster |
 
-The plugins can be installed using the pip command:
+The plugins can be installed using the pip command. If `pip` command is not available on your platform, please follow the platform specific instructions
+to install pip on your machine. Also, 
+
 
 ```
 pip install numpy
 ```
 
-> Note: Some of the plugins may already be installed/present in your environment. In that case please skip that plugin and move to the next plugin in the table.
+> Special Considerations:
+It can be little tricky to install the plugins required on DSX Desktop. The notebook attempts to install the plugins in the user environment automatically.
+Sometimes it does not work because of presence of multiple python environments on the docker container that runs the notebook. In such case, we can
+install the plugins manually by doing the following steps :
+
+1. First find out the python environment that is used by the notebook by inserting a cell at the top of the notebook.
+   !!which python
+   !!which pip
+2. In a terminal, do `docker ps` to list all the docker containers.
+3. Find out container id your notebook is running at by looking for image name `dsx-desktop:ana27`.
+4. docker exec -it <container_id_from_step3>
+5. On the prompt, enter the following command to install `solrcloudpy`. Please note that '/opt/conda/bin/pip' is the output of step1.
+   /opt/conda/bin/pip install --ignore-installed -U solrcloudpy
+6. Perform step5 for all the required plugins.
+
+
+> Note: Some of the plugins may already be installed/present in your environment. In that case please skip that plugin and move to the next plugin in the table. Similarly
+installing the above plugins may require some prerequsite plugins in your platform. Please follow the platform specific instuctions to install the prerequsite plugins
+before installing the plugins required by this code pattern.
 
 ### 8. Launch the notebook
 
@@ -201,6 +239,7 @@ the very first time.
 
 1. Update the following variables in the notebook:
 
+    * `LIVY_URL`
     * `SOLR_INSTALL_DIR`
     * `SOLR_HOST`
     * `SOLR_PORT`
@@ -208,6 +247,11 @@ the very first time.
     * `SSHUSER`
     * `SSHPASSWORD`
     * `tmdb.API_KEY`
+
+> Note:
+Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined two times in the notebook as they are needed in the DSX node and Livy node. Please make sure to
+update all the occurrence of the specific variable in the notebook.
+
 
 1. Run the notebook!
 
