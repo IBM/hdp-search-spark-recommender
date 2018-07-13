@@ -133,8 +133,8 @@ To download and install the connector:
   1. Download the [jar](http://search.maven.org/#artifactdetails%7Ccom.lucidworks.spark%7Cspark-solr%7C3.5.1%7Cjar) to a backup directory
   2. Create a temporary work directory and `cd` to it
   3. Extract the jar using `jar -xvf <location of jar file>`
-  4. rm -rf scala
-  5. rm -rf org/apache/spark
+  4. Run `rm -rf scala`
+  5. Run `rm -rf org/apache/spark`
   6. Rebuild the jar by using `jar -cvf spark-solr-3.5.1-shaded-modified.jar *`
   7. Log into the Ambari Server UI
   8. Select the `Spark2` service and select the `Configs` tab
@@ -276,7 +276,7 @@ To run the notebook you will need to start DSX Local. Below are the steps that n
     * `SSHPASSWORD`
     * `tmdb.API_KEY`
 
-> Note: Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined two times in the notebook as they are needed in the DSX node and Livy node. Please make sure to
+   > Note: Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined two times in the notebook as they are needed in the DSX node and Livy node. Please make sure to
 update all the occurrence of the specific variable in the notebook.
 
 1. Run the notebook!
