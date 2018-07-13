@@ -69,11 +69,9 @@ Once your HDP cluster is deployed, at a minimum, install the following services 
 
 ## Disable Apache Livy CSRF protection
 
-From your Ambari Server UI, disable the Apache Livy server's CSRF proctection by changing the `livy.server.csrf_protection.enable` variable to false, as shown here:
+From your Ambari Server UI, disable the Apache Livy server's CSRF proctection by changing the `livy.server.csrf_protection.enable` variable to `false`. To navigate to the panel, click on the `Spark2` service, then the `Configs` tab, and then open the `Advanced livy2-conf` section.
 
 ![](images/dsx-local-create-project-spark2-livy.png)
-
-To navigate to this panel, click on the `Spark2` service, then the `Configs` tab, and then open the `Advanced livy2-conf` section.
 
 # Steps
 Follow these steps to setup the proper environment to run our Recommender notebook locally.
@@ -170,17 +168,13 @@ cd hdp-search-spark-recommender
 
 In this code pattern we will be using the [Movielens dataset](https://grouplens.org/datasets/movielens/), it contains ratings given by a set of users for movies, as well as movie metadata. For the purpose of this code pattern, we can download the ["latest small" version](http://files.grouplens.org/datasets/movielens/ml-latest-small.zip) of the data set.
 
-Run the following commands from the base directory of the code pattern repository to download the data:
-
-```
-cd data
-wget http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
-unzip ml-latest-small.zip
-```
-
 This code pattern is targeted to run against a multi-node HDP cluster. Therefore, the dataset needs to be moved to HDFS. Move the data to HDFS by issuing the following commands from the Ambari Server:
 
 ```
+mkdir /tmp/data
+cd /tmp/data
+wget http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+unzip ml-latest-small.zip
 hadoop fs -mkdir /movies
 hadoop fs -put *.csv /movies
 ```
@@ -265,21 +259,21 @@ To run the notebook you will need to start DSX Local. Below are the steps that n
     
     * Click the `Create` button.
 
-1. Once created, you can click on the notebook to load and run it. Once running, you will see a number of variables that need to be replaced with values that match your installed environment. These variables are:
+1. Load the notebook.
 
-    * `LIVY_URL`
-    * `SOLR_INSTALL_DIR`
-    * `SOLR_HOST`
-    * `SOLR_PORT`
-    * `ZKHOST`
-    * `SSHUSER`
-    * `SSHPASSWORD`
-    * `tmdb.API_KEY`
+    Once created, you can click on the notebook to load and run it. Once running, you will see a number of variables that need to be replaced with values that match your installed environment. These variables are:
 
-   > Note: Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined two times in the notebook as they are needed in the DSX node and Livy node. Please make sure to
-update all the occurrence of the specific variable in the notebook.
+        * `LIVY_URL`
+        * `HDFS_URL_FOR_DATA`
+        * `SOLR_INSTALL_DIR`
+        * `SOLR_HOST`
+        * `SOLR_PORT`
+        * `ZKHOST`
+        * `SSHUSER`
+        * `SSHPASSWORD`
+        * `tmdb.API_KEY`
 
-1. Run the notebook!
+      > Note: Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined two times in the notebook as they are needed in the DSX node and Livy node. Please make sure to update all the occurrence of the specific variable in the notebook.
 
 ### 8. Run the notebook
 
