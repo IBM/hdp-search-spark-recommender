@@ -341,13 +341,13 @@ The example output in the [data/examples](data/examples) folder shows the output
 
 * Error: `Missing Required Header for CSRF protection.`
 
-   If you see this error when trying to create spark session through livy (the cell below), it means that you need to diable the CSRF in the livy property.   
+   If you see this error when trying to create spark session through livy (the cell below), it means that you need to disable the CSRF in the livy property.   
    ```
    livyURL="http://host name:8999"
    %spark add -s spark -l python -u $livyURL
    ``` 
 
-  > Solution: Go to the [Disable Apache Livy CSRF protection](#disable-apache-livy-csrf-protection) section and follow the steps to disable livy's `livy.server.csrf_protection.enable` property.
+  > Solution: Go to the [Disable Apache Livy CSRF protection](#disable-apache-livy-csrf-protection) section for instructions.
 
 * Error: `404 Client Error: Not Found for url: http://your hostname:8983/solr/ratings/schema`
  
