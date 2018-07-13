@@ -6,7 +6,7 @@ This code pattern demonstrates the key elements of creating such a system by usi
 
 > **What is HDP and HDP Search?** Hortonworks Data Platform (HDP) is a massively scalable platform for storing, processing and analyzing large volumes of data. HDP consists of the essential set of Apache Hadoop projects including MapReduce, Hadoop Distributed File System (HDFS), HCatalog, Pig, Hive, HBase, Zookeeper and Ambari. HDP Search provides applications and tools for indexing content from your HDP cluster to Solr (an open source enterprise search platform).
 
-  ![](images/hdp_arch.png)
+  ![](doc/source/images/hdp_arch.png)
 
    *Hortonworks Data Platform by [Hortonworks](https://hortonworks.com/products/data-platforms/hdp/)*
 
@@ -23,7 +23,7 @@ When you have completed this code pattern, you will understand how to:
 
 ## Flow
 
-![](images/architecture.png)
+![](doc/source/images/architecture.png)
 
 1. Load the movie dataset into Apache Hadoop HDFS.
 2. Use Spark DataFrame operations to clean the dataset and use Spark MLlib to train a collaborative filtering recommendation model.
@@ -61,7 +61,7 @@ To install [HDP v2.6.4](https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.4
 
 Once your HDP cluster is deployed, at a minimum, install the following services as listed in this Ambari Server UI screenshot:
 
-![](images/ambari-services.png)
+![](doc/source/images/ambari-services.png)
 
 > Note: 
 > 1. This code pattern requires that version `2.2.0` of the `Spark2` service be installed.
@@ -71,7 +71,7 @@ Once your HDP cluster is deployed, at a minimum, install the following services 
 
 From your Ambari Server UI, disable the Apache Livy server's CSRF proctection by changing the `livy.server.csrf_protection.enable` variable to `false`. To navigate to the panel, click on the `Spark2` service, then the `Configs` tab, and then open the `Advanced livy2-conf` section.
 
-![](images/dsx-local-create-project-spark2-livy.png)
+![](doc/source/images/dsx-local-create-project-spark2-livy.png)
 
 # Steps
 Follow these steps to setup the proper environment to run our Recommender notebook locally.
@@ -153,7 +153,7 @@ For production deployments it is recommended to use `DSX Local` with a three nod
 
 When installing `DSX Desktop`, choose `Jupyter Notebooks` with `Anaconda (Python 2.7)`.
      
-  ![](images/dsx-local-create-project-dsx-Desktop.png)
+  ![](doc/source/images/dsx-local-create-project-dsx-Desktop.png)
 
 ### 4. Clone the repo
 
@@ -235,21 +235,21 @@ To run the notebook you will need to start DSX Local. Below are the steps that n
 
     * From the DSK Desktop dashboard, click on `Create project`.
 
-      ![](images/dsx-local-create-project-button.png)
+      ![](doc/source/images/dsx-local-create-project-button.png)
   
     * Give the project a name and click the `Create` button.
 
-      ![](images/dsx-local-create-project.png)
+      ![](doc/source/images/dsx-local-create-project.png)
 
 1. Create the notebook.
 
     * From the project dashboard view, click on `Create notebook`.
 
-      ![](images/dsx-local-create-notebook-button.png)
+      ![](doc/source/images/dsx-local-create-notebook-button.png)
 
     * Select the `From URL` tab to specify the URL to the notebook in this repository.
 
-      ![](images/dsx-local-create-notebook.png)
+      ![](doc/source/images/dsx-local-create-notebook.png)
 
     * Enter this URL:
 
@@ -297,19 +297,19 @@ There are several ways to execute the code cells in your notebook:
     start executing from the first cell under the currently selected cell, and then
     continue executing all cells that follow.
 
-![](images/dsx-local-run-all.png)
+![](doc/source/images/dsx-local-run-all.png)
 
 # Sample output
 
 After classifying the data by movies, ratings and genres, we train our recommender model. 
 
-![](images/ratings-table.png)
+![](doc/source/images/ratings-table.png)
 
-![](images/genre-table.png)
+![](doc/source/images/genre-table.png)
 
 After loading our model into Solr, we can predict which movies people will like based on ratings of similar movies in the same genre.
 
-![](images/movie-list.png)
+![](doc/source/images/movie-list.png)
 
 The example output in the [data/examples](data/examples) folder shows the output of the notebook after running it in full. View it [here](data/examples/solr-hdp-spark-recommender.ipynb).
 
