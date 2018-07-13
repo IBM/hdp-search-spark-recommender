@@ -187,7 +187,7 @@ hadoop fs -put *.csv /movies
 
 ### 6. Setup python plugins
 
-This code pattern relies upon a few python plugins for everything to work together. Some plugins are required to be installed in the node where DSX Local or DSX Desktop is installed and the others need to be installed in all the HDP compute nodes. The following table describes the details where these plugins are to be installed.
+This code pattern relies upon a few python plugins for everything to work together. Some plugins are required to be installed in the node where DSX Local or DSX Desktop is installed and the others need to be installed in all the HDP compute nodes. The following table lists which plugins are required and where they need to be installed:
 
 | Library | Install Location |
 | ------------- | ------------- |
@@ -217,10 +217,13 @@ Occasionally it will fail due to the presence of multiple python environments in
    !!which python
    !!which pip
    ```
-2. In a terminal, do `docker ps` to list all the docker containers.
+2. In a terminal, type `docker ps` to list all the docker containers.
 3. Find out the container id of your notebook by looking for the image name `dsx-desktop:ana27`.
-4. docker exec -it <container_id>
-5. On the prompt, enter the following command to install `solrcloudpy` (this example assumes that the output of `!!which pip` is `/opt/conda/bin/pip`): 
+4. Start a interactive bash shell on the container by running the following command:
+    ```
+    docker exec -it <container_id>
+    ```
+5. At the prompt, enter the following command to install `solrcloudpy` (this example assumes that the `pip` command location determined by Step 1 is `/opt/conda/bin/pip`): 
    ```
    /opt/conda/bin/pip install --ignore-installed -U solrcloudpy
    ```
