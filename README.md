@@ -114,11 +114,14 @@ This code pattern was tested with HDP Search (`Solr`) v6.6.2 and assumes that it
 
     To help simplify and consolidate the instructions, the important steps are repeated below:
   
-    > Note: the following instructions assume the installation directory for Solr is `/opt/lucidworks-hdpsearch/solr`.
+    > Note: The following instructions assume the installation directory for Solr is `/opt/lucidworks-hdpsearch/solr`.
   
     1. Download the [VectorPlugin.jar](https://github.com/saaay71/solr-vector-scoring/blob/master/VectorPlugin.jar) file.
+    
     2. Create directory `plugins` in the `dist` directory of the Solr installation location.
+    
     3. Copy VectorPlugin.jar to /opt/lucideworkds-hdpsearch/solr/dist/plugins/
+    
     4. Add the following lines to the `solrconfig.xml` file located in `/opt/lucidworks-hdpsearch/solr/server/solr/configsets/data_driven_schema_configs/conf`:
 
       ```
