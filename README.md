@@ -89,9 +89,11 @@ Follow these steps to setup the proper environment to run our Recommender notebo
 
 This code pattern was tested with HDP Search (`Solr`) v6.6.2 and assumes that it is started in `cloud mode`. Minimally, this can be accomplished by performing the following steps:
 
-1. Install Solr following the [HDP Solr Search installation instructions](https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.4/bk_solr-search-installation/content/hdp-search30-install-mpack.html).
+1. Install the [HDP Solr Management Pack](https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.6.4/bk_solr-search-installation/content/hdp-search30-install-mpack.html).
 
-1. Verify that the Solr server is running. To accomplish this, either:
+2. Install Solr using the Ambari Server UI. `Solr` should be listed as one of the available services after clicking the `Action -> Add Service` button.
+
+3. Verify that the Solr server is running. To accomplish this, either:
 
    1. Access the Solr admin dashboard:
       ```
@@ -102,17 +104,46 @@ This code pattern was tested with HDP Search (`Solr`) v6.6.2 and assumes that it
 
    1. Run the `solr status` command:
       ```
-      cd <solr_installation_dir>/solr/bin
+      cd <solr_installation_dir>/bin
       ./solr status
       ```
 
-2. Install the `Solr vector scoring plugin` using the following [instructions](https://github.com/saaay71/solr-vector-scoring). 
+4. Install the `Solr vector scoring plugin`.
 
-    > Note: When making changes to the `solrconfig.xml` and `managed_schema` files, avoid using cut and paste to reduce the chance of unwanted characters being inserted.
+    The installation instructions and plugin jar file can be found in this [repository](https://github.com/saaay71/solr-vector-scoring). 
+
+    To help simplify and consolidate the instructions, the important steps are repeated below:
+  
+    > Note: the following instructions assume the installation directory for Solr is `/opt/lucidworks-hdpsearch/solr`.
+  
+    1. Download the [VectorPlugin.jar](https://github.com/saaay71/solr-vector-scoring/blob/master/VectorPlugin.jar) file.
+    2. Create directory `plugins` in the `dist` directory of the Solr installation location.
+    3. Copy VectorPlugin.jar to /opt/lucideworkds-hdpsearch/solr/dist/plugins/
+    4. Add the following lines to the `solrconfig.xml` file located in `/opt/lucidworks-hdpsearch/solr/server/solr/configsets/data_driven_schema_configs/conf`:
+
+      ```
+      <lib dir="${solr.install.dir:../../../..}/dist/plugins/" regex=".*\.jar" />
+      
+      <queryParser name="vp" class="com.github.saaay71.solr.VectorQParserPlugin" />
+      ```
+
+    5. Add the following lines to the `managed-schema` file located in `/opt/lucidworks-hdpsearch/solr/server/solr/configsets/data_driven_schema_configs/conf`:
+      ```
+      <fieldType name="VectorField" class="solr.TextField" indexed="true" termOffsets="true" stored="true" termPayloads="true" termPositions="true" termVectors="true" storeOffsetsWithPositions="true">
+        <analyzer>
+          <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+          <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="float"/>
+        </analyzer>
+      </fieldType>
+
+      <field name="vector" type="VectorField" indexed="true" termOffsets="true" stored="true" termPositions="true" termVectors="true" multiValued="true"/>
+      ```
+
+    > Note: When making changes to the `solrconfig.xml` and `managed_schema` files, take care to not copy in any extraneous spaces or characters.
 
     To test out your changes, try out the samples shown in the [Examples](https://github.com/saaay71/solr-vector-scoring#example) section of the plugin's README. This will require you to create test collections - see the [Running Solr Docs](https://lucene.apache.org/solr/guide/6_6/running-solr.html#running-solr) for instructions on how to do that.
-    
-3. Re-start the Ambari server:
+
+    6. Re-start the Ambari server:
 
     ```
     ambari-server restart
@@ -185,13 +216,15 @@ This code pattern relies upon a few python plugins for everything to work togeth
 
 | Library | Install Location |
 | ------------- | ------------- |
-| tmdbsimple | DSX Node |
+| tmdbsimple | DSX node and all nodes of HDP cluster |
 | IPython  | DSX node |
 | paramiko | All nodes of HDP cluster | 
 | numpy | All nodes of HDP cluster |
 | simplejson | DSX node and all nodes of HDP cluster |
 | urllib2 | DSX node and all nodes of HDP cluster |
 | solrcloudpy | DSX node and all nodes of HDP cluster |
+
+> Note regarding DSX node plugins: The Jupyter notebook running in DSX Desktop will attempt to install each of the required plugins, so no futher action should be needed. If, however, there are issues and a plugin needs to be manually installed, see the [Troubleshooting](#troubleshooting) section below for instructions.  
 
 The plugins can be installed using the pip command.
 
@@ -202,26 +235,6 @@ For example:
 ```
 pip install numpy
 ```
-
-> Special Consideration: It can be a little tricky to install the plugins required on DSX Desktop. The notebook attempts to install the plugins in the user environment automatically.
-Occasionally it will fail due to the presence of multiple python environments in the docker container that runs the notebook. If this occurs, we can install the plugins manually by performing the following steps:
-
-1. Find out the python environment that is used by the notebook by inserting a cell at the top of the notebook. Enter and run the following commands:
-   ```
-   !!which python
-   !!which pip
-   ```
-2. In a terminal, type `docker ps` to list all the docker containers.
-3. Find out the container id of your notebook by looking for the image name `dsx-desktop:ana27`.
-4. Start a interactive bash shell on the container by running the following command:
-    ```
-    docker exec -it <container_id>
-    ```
-5. At the prompt, enter the following command to install `solrcloudpy` (this example assumes that the `pip` command location determined by Step 1 is `/opt/conda/bin/pip`): 
-   ```
-   /opt/conda/bin/pip install --ignore-installed -U solrcloudpy
-   ```
-6. Repeat the previous step for all remaining plugins.
 
 > Note: Some of the plugins may already be installed/present in your environment. In that case please skip that plugin and move on to the next plugin in the table. Similarly, installing the plugins may require installing some prerequsite plugins on your platform. In this case, please follow the platform specific instuctions to install the prerequsite plugins first.
 
@@ -273,8 +286,18 @@ To run the notebook you will need to start DSX Local. Below are the steps that n
         * `SSHPASSWORD`
         * `tmdb.API_KEY`
 
-      > Note: Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined two times in the notebook as they are needed in the DSX node and Livy node. Please make sure to update all the occurrence of the specific variable in the notebook.
+    Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined twice in the notebook as they are needed in the DSX node and the Livy node. 
+    
+    A Livy node refers to notebook cells that access the HDP cluster using the Livy interface. These cells can be distinquished from other notebook cells by the following tag located at the top of the cell:
 
+    Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined twice in the notebook as they are needed in both the DSX node and the HDP cluster nodes. 
+    
+    Note that in the notebook, the HDP cluster nodes are acceesed via the Livy interface. Cells that access the HDP cluster are distinquishable by the following tag located at the top of the cell:
+    
+    ```
+    %%spark
+    ```
+    
 ### 8. Run the notebook
 
 When a notebook is executed, what is actually happening is that each code cell in
@@ -366,7 +389,27 @@ The example output in the [data/examples](data/examples) folder shows the output
   If you see this error in your notebook while testing your TMDb API access, or generating recommendations, it means you have installed `tmdbsimple` Python package, but have not set up your API key.
 
   > Solution: You will need to access [The Movie Database API](https://www.themoviedb.org/documentation/api) and follow theses [instructions](https://developers.themoviedb.org/3/getting-started) to get an API key. Then copy the key into the `tmdb.API_KEY = 'YOUR_API_KEY'` line in the notebook. Once you have done that, execute that cell to test your access to TMDb API.
-  
+
+* Error: `Notebook running in DSX Desktop is unable to install python packages or plugins`
+
+  Occasionally, this can happen due to the presence of multiple python environments in the docker container that runs the notebook. If this occurs, we can install the plugins manually by performing the following steps:
+
+  1. Find out the python environment that is used by the notebook by inserting a cell at the top of the notebook. Enter and run the following commands:
+    ```
+    !!which python
+    !!which pip
+    ```
+  2. In a terminal, type `docker ps` to list all the docker containers.
+  3. Find out the container id of your notebook by looking for the image name `dsx-desktop:ana27`.
+  4. Start a interactive bash shell on the container by running the following command:
+      ```
+      docker exec -it <container_id>
+      ```
+  5. At the prompt, enter the following command to install the plugin, for example `solrcloudpy` (this example assumes that the `pip` command location determined by Step 1 is `/opt/conda/bin/pip`): 
+    ```
+    /opt/conda/bin/pip install --ignore-installed -U solrcloudpy
+    ```
+
 # Links
 
 * [Teaming on Data: IBM and Hortonworks Broaden Relationship](https://hortonworks.com/blog/teaming-data-ibm-hortonworks-broaden-relationship/)
