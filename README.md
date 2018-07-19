@@ -120,7 +120,7 @@ This code pattern was tested with HDP Search (`Solr`) v6.6.2 and assumes that it
     
     2. Create directory `plugins` in the `dist` directory of the Solr installation location.
     
-    3. Copy VectorPlugin.jar to /opt/lucideworkds-hdpsearch/solr/dist/plugins/
+    3. Copy `VectorPlugin.jar` to `/opt/lucideworkds-hdpsearch/solr/dist/plugins/`.
     
     4. Add the following lines to the `solrconfig.xml` file located in `/opt/lucidworks-hdpsearch/solr/server/solr/configsets/data_driven_schema_configs/conf`:
 
@@ -288,15 +288,11 @@ To run the notebook you will need to start DSX Local. Below are the steps that n
         * `SSHUSER`
         * `SSHPASSWORD`
         * `tmdb.API_KEY`
+    
+    Some variables such as tmdb.API_KEY, SOLR_HOST, etc. are defined twice in the notebook as they are needed in both the DSX node and the HDP cluster nodes.
+    
+    Note that in the notebook, the HDP cluster nodes are accessed via the Livy interface. Cells that access the HDP cluster are distinguishable by the following tag located at the top of the cell:
 
-    Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined twice in the notebook as they are needed in the DSX node and the Livy node. 
-    
-    A Livy node refers to notebook cells that access the HDP cluster using the Livy interface. These cells can be distinquished from other notebook cells by the following tag located at the top of the cell:
-
-    Some variables such as tmdb.API_KEY, SOLR_HOST etc are defined twice in the notebook as they are needed in both the DSX node and the HDP cluster nodes. 
-    
-    Note that in the notebook, the HDP cluster nodes are acceesed via the Livy interface. Cells that access the HDP cluster are distinquishable by the following tag located at the top of the cell:
-    
     ```
     %%spark
     ```
@@ -399,14 +395,14 @@ The example output in the [data/examples](data/examples) folder shows the output
 
   1. Find out the python environment that is used by the notebook by inserting a cell at the top of the notebook. Enter and run the following commands:
     ```
-    !!which python
-    !!which pip
+    !which python
+    !which pip
     ```
   2. In a terminal, type `docker ps` to list all the docker containers.
   3. Find out the container id of your notebook by looking for the image name `dsx-desktop:ana27`.
   4. Start a interactive bash shell on the container by running the following command:
       ```
-      docker exec -it <container_id>
+      docker exec -it <container_id> bash
       ```
   5. At the prompt, enter the following command to install the plugin, for example `solrcloudpy` (this example assumes that the `pip` command location determined by Step 1 is `/opt/conda/bin/pip`): 
     ```
