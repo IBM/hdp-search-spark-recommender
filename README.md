@@ -1,3 +1,7 @@
+# WARNING: This repository is no longer maintained :warning:
+
+> This repository will not be updated. The repository will be kept available in read-only mode. Refer to https://github.com/IBM/sms-spam-filter-using-hortonworks for a similar example.
+
 # Building a Recommender using Data Science Experience Local and Hortonworks Data Platform
 
 Recommendation engines are one of the most well known, widely used and highest value use cases for applying machine learning. Despite this, while there are many resources available for the basics of training a recommendation model, there are relatively few that explain how to actually deploy these models to create a large-scale recommender system.
